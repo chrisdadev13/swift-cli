@@ -7,6 +7,16 @@ import AVFoundation
 import CoreMedia
 import ArgumentParser
 
+// Global variable for signal handling
+private var globalCaptureManager: AudioCaptureManager?
+
+// Signal handler function that doesn't capture context
+private func handleSignal(_ signal: Int32) {
+    print("\nReceived interrupt signal. Stopping capture...")
+    globalCaptureManager?.stopCapture()
+    Foundation.exit(0)
+}
+
 // MARK: - Command Line Interface
 
 struct AudioCaptureCLI: ParsableCommand {
@@ -30,13 +40,10 @@ struct AudioCaptureCLI: ParsableCommand {
         print("Output will be saved to: \(output)")
         
         let captureManager = AudioCaptureManager(verbose: verbose)
+        globalCaptureManager = captureManager
         
         // Set up signal handling for clean exit
-        signal(SIGINT) { _ in
-            print("\nReceived interrupt signal. Stopping capture...")
-            captureManager.stopCapture()
-            Foundation.exit(0)
-        }
+        signal(SIGINT, handleSignal)
         
         // Start capture
         try captureManager.startCapture(outputPath: output)
@@ -163,13 +170,16 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
         
         // Add self as stream output to receive audio samples
         if #available(macOS 13.0, *) {
-            try stream?.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
+            guard let stream = stream else {
+                throw NSError(domain: "AudioCaptureCLI", code: 6, userInfo: [NSLocalizedDescriptionKey: "Stream not initialized"])
+            }
+            try stream.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
+            
+            // Start capturing
+            try stream.startCapture()
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
         }
-        
-        // Start capturing
-        try stream?.startCapture()
     }
     
     // MARK: - SCStreamDelegate
