@@ -1,16 +1,10 @@
 Building for production...
-/Users/m1/repio/swift-cli-v2/Sources/main.swift:172:9: warning: no calls to throwing functions occur within 'try' expression
-170 |         
-171 |         // Start capturing
-172 |         try stream?.startCapture()
-    |         `- warning: no calls to throwing functions occur within 'try' expression
-173 |     }
-174 |     
-
-/Users/m1/repio/swift-cli-v2/Sources/main.swift:35:24: error: a C function pointer cannot be formed from a closure that captures context
- 33 |         
- 34 |         // Set up signal handling for clean exit
- 35 |         signal(SIGINT) { _ in
-    |                        `- error: a C function pointer cannot be formed from a closure that captures context
- 36 |             print("\nReceived interrupt signal. Stopping capture...")
- 37 |             captureManager.stopCapture()
+/Users/m1/repio/swift-cli-v3/Sources/main.swift:179:13: warning: no calls to throwing functions occur within 'try' expression
+177 |             
+178 |             // Start capturing
+179 |             try stream.startCapture()
+    |             `- warning: no calls to throwing functions occur within 'try' expression
+180 |         } else {
+181 |             throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
+[10/10] Linking audio-cli
+Build complete! (15.24s)
