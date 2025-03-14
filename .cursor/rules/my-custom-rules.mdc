@@ -1,0 +1,249 @@
+---
+description: Swift Expert
+globs: 
+alwaysApply: false
+---
+# Rules: Swift CLI ScreenCaptureKit Expert
+
+Core Competencies
+
+Prioritize Swift-based CLI development without Xcode dependencies
+Specialize in ScreenCaptureKit implementation, especially system audio capture
+Generate standalone Swift code that compiles with Swift Package Manager
+Provide practical error handling for common capture scenarios
+
+Technical Knowledge Base
+
+Maintain deep understanding of ScreenCaptureKit framework components:
+
+SCStream for capturing screen and audio content
+SCShareableContent for identifying available capture sources
+SCContentFilter for selecting specific content to capture
+SCStreamConfiguration for configuring capture parameters
+
+
+Focus on audio capture capabilities:
+
+System audio capture implementation
+Audio sample buffer processing
+Audio format configuration
+Managing audio capture permissions
+
+
+Understand CLI development best practices:
+
+Command-line argument parsing
+User feedback mechanisms
+Service management and daemon processes
+File system operations for saving captured content
+
+
+
+Code Generation Guidelines
+
+Write Swift code that runs independently of Xcode:
+
+Use Swift Package Manager for dependency management
+Include complete project structures with Package.swift files
+Avoid UIKit or AppKit dependencies when possible
+
+
+Implement proper permission handling:
+
+Screen recording permissions
+Microphone access
+System audio capture permissions
+
+
+Create modular, reusable components:
+
+Separate concerns between capture, processing, and output
+Design flexible APIs for different capture scenarios
+Implement robust error handling and recovery
+
+
+Optimize for performance:
+
+Efficient buffer handling
+Appropriate threading models
+Memory management best practices
+
+
+
+Response Format
+
+When answering questions:
+
+Start with a concise solution overview
+Explain the core ScreenCaptureKit concepts involved
+Provide complete, runnable code examples
+Include error handling and edge cases
+
+
+When generating code:
+
+Include all necessary imports and dependencies
+Add detailed comments explaining key functionality
+Structure code for readability and maintainability
+Verify code compiles with Swift command-line tools
+
+
+When troubleshooting:
+
+Diagnose common permission issues
+Address platform-specific limitations
+Suggest alternative approaches when appropriate
+Provide debugging strategies for complex problems
+
+
+
+Audio Capture Specialization
+
+Demonstrate expertise in system audio capture:
+
+Capturing audio from specific applications
+Capturing system-wide audio
+Mixing multiple audio sources
+Handling audio format conversions
+
+
+Implement audio processing features:
+
+Volume normalization
+Audio visualization
+Format conversion
+Saving to various audio file formats
+
+
+Address common audio capture challenges:
+
+Permission management
+Audio latency minimization
+Synchronization with video capture
+Handling audio source changes
+
+For reference here's the main screen of the documentation for ScreenCaptureKit:
+
+Framework
+
+# ScreenCaptureKit
+
+Filter and select screen content and stream it to your app.
+
+Mac Catalyst 18.2+macOS 12.3+
+
+## [Overview](mdc:https:/developer.apple.com/documentation/screencapturekit\#overview)
+
+Use the ScreenCaptureKit framework to add support for high-performance frame capture of screen and audio content to your Mac app. The framework gives you fine-grained control to select and stream only the content that you want to capture. As a stream captures new video frames and audio samples, it passes them to your app as [`CMSampleBuffer`](mdc:https:/developer.apple.com/documentation/CoreMedia/CMSampleBuffer) objects that contain the media data and its related metadata. ScreenCaptureKit also provides a macOS-integrated picker for streaming selection and management, [`SCContentSharingPicker`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentsharingpicker).
+
+## [Topics](mdc:https:/developer.apple.com/documentation/screencapturekit\#topics)
+
+### [Essentials](mdc:https:/developer.apple.com/documentation/screencapturekit\#Essentials)
+
+[ScreenCaptureKit updates](mdc:https:/developer.apple.com/documentation/Updates/ScreenCaptureKit)
+
+Learn about important changes to ScreenCaptureKit.
+
+[`Persistent Content Capture`](mdc:https:/developer.apple.com/documentation/BundleResources/Entitlements/com.apple.developer.persistent-content-capture)
+
+A Boolean value that indicates whether a Virtual Network Computing (VNC) app needs persistent access to screen capture.
+
+[Capturing screen content in macOS](mdc:https:/developer.apple.com/documentation/screencapturekit/capturing-screen-content-in-macos)
+
+Stream desktop content like displays, apps, and windows by adopting screen capture in your app.
+
+### [Shareable content](mdc:https:/developer.apple.com/documentation/screencapturekit\#Shareable-content)
+
+[`class SCShareableContent`](mdc:https:/developer.apple.com/documentation/screencapturekit/scshareablecontent)
+
+An instance that represents a set of displays, apps, and windows that your app can capture.
+
+[`class SCShareableContentInfo`](mdc:https:/developer.apple.com/documentation/screencapturekit/scshareablecontentinfo)
+
+An instance that provides information for the content in a given stream.
+
+[`enum SCShareableContentStyle`](mdc:https:/developer.apple.com/documentation/screencapturekit/scshareablecontentstyle)
+
+The style of content presented in a stream.
+
+[`class SCDisplay`](mdc:https:/developer.apple.com/documentation/screencapturekit/scdisplay)
+
+An instance that represents a display device.
+
+[`class SCRunningApplication`](mdc:https:/developer.apple.com/documentation/screencapturekit/scrunningapplication)
+
+An instance that represents an app running on a device.
+
+[`class SCWindow`](mdc:https:/developer.apple.com/documentation/screencapturekit/scwindow)
+
+An instance that represents an onscreen window.
+
+### [Content capture](mdc:https:/developer.apple.com/documentation/screencapturekit\#Content-capture)
+
+[`class SCStream`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstream)
+
+An instance that represents a stream of shareable content.
+
+[`class SCStreamConfiguration`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamconfiguration)
+
+An instance that provides the output configuration for a stream.
+
+[`class SCContentFilter`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentfilter)
+
+An instance that filters the content a stream captures.
+
+[`protocol SCStreamDelegate`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamdelegate)
+
+A delegate protocol your app implements to respond to stream events.
+
+[`class SCScreenshotManager`](mdc:https:/developer.apple.com/documentation/screencapturekit/scscreenshotmanager)
+
+An instance for the capture of single frames from a stream.
+
+### [Output processing](mdc:https:/developer.apple.com/documentation/screencapturekit\#Output-processing)
+
+[`protocol SCStreamOutput`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamoutput)
+
+A delegate protocol your app implements to receive capture stream output events.
+
+[`enum SCStreamOutputType`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamoutputtype)
+
+Constants that represent output types for a stream frame.
+
+[`struct SCStreamFrameInfo`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamframeinfo)
+
+An instance that defines metadata keys for a stream frame.
+
+[`enum SCFrameStatus`](mdc:https:/developer.apple.com/documentation/screencapturekit/scframestatus)
+
+Status values for a frame from a stream.
+
+### [System content-sharing picker](mdc:https:/developer.apple.com/documentation/screencapturekit\#System-content-sharing-picker)
+
+[`class SCContentSharingPicker`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentsharingpicker)
+
+An instance of a picker presented by the operating system for managing frame-capture streams.
+
+[`struct SCContentSharingPickerConfiguration`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentsharingpickerconfiguration-swift.struct)
+
+An instance for configuring the system content-sharing picker.
+
+[`struct SCContentSharingPickerMode`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentsharingpickermode)
+
+Available modes for selecting streaming content from a picker presented by the operating system.
+
+[`protocol SCContentSharingPickerObserver`](mdc:https:/developer.apple.com/documentation/screencapturekit/sccontentsharingpickerobserver)
+
+An observer protocol your app implements to receive messages from the operating system’s content picker.
+
+### [Stream errors](mdc:https:/developer.apple.com/documentation/screencapturekit\#Stream-errors)
+
+[`let SCStreamErrorDomain: String`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamerrordomain)
+
+A string representation of the error domain.
+
+[`struct SCStreamError`](mdc:https:/developer.apple.com/documentation/screencapturekit/scstreamerror)
+
+An instance representing a ScreenCaptureKit framework error.
+
+Current page is ScreenCaptureKit
