@@ -1,13 +1,19 @@
 Building for production...
-/Users/m1/repio/swift-cli-v3/Sources/main.swift:179:13: warning: no calls to throwing functions occur within 'try' expression
-177 |             
+/Users/m1/repio/swift-cli-v5/Sources/main.swift:180:17: warning: no calls to throwing functions occur within 'try' expression
 178 |             // Start capturing
-179 |             try stream.startCapture()
-    |             `- warning: no calls to throwing functions occur within 'try' expression
-180 |         } else {
-181 |             throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
-[10/10] Linking audio-cli
-Build complete! (15.24s)
+179 |             do {
+180 |                 try stream.startCapture()
+    |                 `- warning: no calls to throwing functions occur within 'try' expression
+181 |             } catch {
+182 |                 throw NSError(domain: "AudioCaptureCLI", code: 7, 
+
+/Users/m1/repio/swift-cli-v5/Sources/main.swift:181:15: warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+179 |             do {
+180 |                 try stream.startCapture()
+181 |             } catch {
+    |               `- warning: 'catch' block is unreachable because no errors are thrown in 'do' block
+182 |                 throw NSError(domain: "AudioCaptureCLI", code: 7, 
+183 |                               userInfo: [NSLocalizedDescriptionKey: "Failed to start capture: \(error.localizedDescription)"])
 
 
 tyeDdLBSFH7o
