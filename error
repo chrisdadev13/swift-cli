@@ -1,0 +1,249 @@
+/Users/m1/repio/swift-cli/Sources/main.swift:60:25: error: 'SCStream' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+    |                         `- error: 'SCStream' is only available in macOS 12.3 or newer
+ 61 |     private var availableContent: SCShareableContent?
+ 62 |     private var isCapturing = false
+
+/Users/m1/repio/swift-cli/Sources/main.swift:61:35: error: 'SCShareableContent' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    |                                   `- error: 'SCShareableContent' is only available in macOS 12.3 or newer
+ 62 |     private var isCapturing = false
+ 63 |     private var audioWriter: AudioFileWriter?
+
+/Users/m1/repio/swift-cli/Sources/main.swift:163:27: error: 'SCStream' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+161 |     // MARK: - SCStreamDelegate
+162 |     
+163 |     func stream(_ stream: SCStream, didStopWithError error: Error) {
+    |          |                `- error: 'SCStream' is only available in macOS 12.3 or newer
+    |          `- note: add @available attribute to enclosing instance method
+164 |         print("Stream stopped with error: \(error.localizedDescription)")
+165 |         isCapturing = false
+
+/Users/m1/repio/swift-cli/Sources/main.swift:170:27: error: 'SCStream' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+168 |     // MARK: - SCStreamOutput
+169 |     
+170 |     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
+    |          |                `- error: 'SCStream' is only available in macOS 12.3 or newer
+    |          `- note: add @available attribute to enclosing instance method
+171 |         guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
+172 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:170:98: error: 'SCStreamOutputType' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+168 |     // MARK: - SCStreamOutput
+169 |     
+170 |     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
+    |          |                                                                                       `- error: 'SCStreamOutputType' is only available in macOS 12.3 or newer
+    |          `- note: add @available attribute to enclosing instance method
+171 |         guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
+172 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:38:13: error: static member 'exit' cannot be used on instance of type 'AudioCaptureCLI'
+ 36 |             print("\nReceived interrupt signal. Stopping capture...")
+ 37 |             captureManager.stopCapture()
+ 38 |             exit(0)
+    |             `- error: static member 'exit' cannot be used on instance of type 'AudioCaptureCLI'
+ 39 |         }
+ 40 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:38:18: error: missing argument label 'withError:' in call
+ 36 |             print("\nReceived interrupt signal. Stopping capture...")
+ 37 |             captureManager.stopCapture()
+ 38 |             exit(0)
+    |                  `- error: missing argument label 'withError:' in call
+ 39 |         }
+ 40 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:38:18: error: argument type 'Int' does not conform to expected type 'Error'
+ 36 |             print("\nReceived interrupt signal. Stopping capture...")
+ 37 |             captureManager.stopCapture()
+ 38 |             exit(0)
+    |                  `- error: argument type 'Int' does not conform to expected type 'Error'
+ 39 |         }
+ 40 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:114:9: error: 'SCShareableContent' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+108 |     }
+109 |     
+110 |     private func getAvailableContent() throws {
+    |                  `- note: add @available attribute to enclosing instance method
+111 |         let semaphore = DispatchSemaphore(value: 0)
+112 |         var contentError: Error?
+113 |         
+114 |         SCShareableContent.getExcludingDesktopWindows(false, onScreenWindowsOnly: true) { content, error in
+    |         |- error: 'SCShareableContent' is only available in macOS 12.3 or newer
+    |         `- note: add 'if #available' version check
+115 |             if let error = error {
+116 |                 contentError = error
+
+/Users/m1/repio/swift-cli/Sources/main.swift:142:47: error: 'nil' is not compatible with expected argument type 'SCDisplay'
+140 |         
+141 |         // Create a content filter for system audio
+142 |         let filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
+    |                                               `- error: 'nil' is not compatible with expected argument type 'SCDisplay'
+143 |         
+144 |         // Configure the stream
+
+/Users/m1/repio/swift-cli/Sources/main.swift:145:29: error: 'SCStreamConfiguration' is only available in macOS 12.3 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+134 |     }
+135 |     
+136 |     private func setupAndStartCaptureStream() throws {
+    |                  `- note: add @available attribute to enclosing instance method
+137 |         guard let availableContent = availableContent else {
+138 |             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
+    :
+143 |         
+144 |         // Configure the stream
+145 |         let configuration = SCStreamConfiguration()
+    |                             |- error: 'SCStreamConfiguration' is only available in macOS 12.3 or newer
+    |                             `- note: add 'if #available' version check
+146 |         
+147 |         // Enable audio capture
+
+/Users/m1/repio/swift-cli/Sources/main.swift:148:23: error: 'capturesAudio' is only available in macOS 13.0 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+134 |     }
+135 |     
+136 |     private func setupAndStartCaptureStream() throws {
+    |                  `- note: add @available attribute to enclosing instance method
+137 |         guard let availableContent = availableContent else {
+138 |             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
+    :
+146 |         
+147 |         // Enable audio capture
+148 |         configuration.capturesAudio = true
+    |                       |- error: 'capturesAudio' is only available in macOS 13.0 or newer
+    |                       `- note: add 'if #available' version check
+149 |         configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
+150 |         
+
+/Users/m1/repio/swift-cli/Sources/main.swift:149:23: error: 'excludesCurrentProcessAudio' is only available in macOS 13.0 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+134 |     }
+135 |     
+136 |     private func setupAndStartCaptureStream() throws {
+    |                  `- note: add @available attribute to enclosing instance method
+137 |         guard let availableContent = availableContent else {
+138 |             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
+    :
+147 |         // Enable audio capture
+148 |         configuration.capturesAudio = true
+149 |         configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
+    |                       |- error: 'excludesCurrentProcessAudio' is only available in macOS 13.0 or newer
+    |                       `- note: add 'if #available' version check
+150 |         
+151 |         // Create the stream
+
+/Users/m1/repio/swift-cli/Sources/main.swift:155:50: error: 'audio' is only available in macOS 13.0 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+134 |     }
+135 |     
+136 |     private func setupAndStartCaptureStream() throws {
+    |                  `- note: add @available attribute to enclosing instance method
+137 |         guard let availableContent = availableContent else {
+138 |             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
+    :
+153 |         
+154 |         // Add self as stream output to receive audio samples
+155 |         try stream?.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
+    |                                                  |- error: 'audio' is only available in macOS 13.0 or newer
+    |                                                  `- note: add 'if #available' version check
+156 |         
+157 |         // Start capturing
+
+/Users/m1/repio/swift-cli/Sources/main.swift:171:24: error: 'audio' is only available in macOS 13.0 or newer
+ 57 | // MARK: - Audio Capture Manager
+ 58 | 
+ 59 | class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
+    |       `- note: add @available attribute to enclosing class
+ 60 |     private var stream: SCStream?
+ 61 |     private var availableContent: SCShareableContent?
+    :
+168 |     // MARK: - SCStreamOutput
+169 |     
+170 |     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
+    |          `- note: add @available attribute to enclosing instance method
+171 |         guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
+    |                        |- error: 'audio' is only available in macOS 13.0 or newer
+    |                        `- note: add 'if #available' version check
+172 |         
+173 |         if verbose {
+
+/Users/m1/repio/swift-cli/Sources/main.swift:241:92: error: value of optional type 'UnsafePointer<AudioStreamBasicDescription>?' must be unwrapped to refer to member 'pointee' of wrapped base type 'UnsafePointer<AudioStreamBasicDescription>'
+239 |         
+240 |         // Get the audio stream basic description
+241 |         var asbd = CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDescription).pointee
+    |                                                                                            |- error: value of optional type 'UnsafePointer<AudioStreamBasicDescription>?' must be unwrapped to refer to member 'pointee' of wrapped base type 'UnsafePointer<AudioStreamBasicDescription>'
+    |                                                                                            |- note: chain the optional using '?' to access member 'pointee' only for non-'nil' base values
+    |                                                                                            `- note: force-unwrap using '!' to abort execution if the optional value contains 'nil'
+242 |         
+243 |         // Create an AVAudioFormat from the ASBD
+
+/Users/m1/repio/swift-cli/Sources/main.swift:272:9: warning: no calls to throwing functions occur within 'try' expression
+270 |         var blockBuffer: CMBlockBuffer?
+271 |         
+272 |         try CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
+    |         `- warning: no calls to throwing functions occur within 'try' expression
+273 |             sampleBuffer,
+274 |             bufferListSizeNeededOut: nil,
