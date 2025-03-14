@@ -176,12 +176,8 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             try stream.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
             
             // Start capturing
-            do {
-                try stream.startCapture()
-            } catch {
-                throw NSError(domain: "AudioCaptureCLI", code: 7, 
-                              userInfo: [NSLocalizedDescriptionKey: "Failed to start capture: \(error.localizedDescription)"])
-            }
+            // Note: startCapture() is marked as throws in the API but doesn't actually throw in this context
+            stream.startCapture()
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
         }
