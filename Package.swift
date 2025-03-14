@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "audio-cli",
     platforms: [
-        .macOS(.v12) // ScreenCaptureKit requires macOS 12.3 or later
+        .macOS(.v13) // ScreenCaptureKit audio features require macOS 13.0 or later
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0")

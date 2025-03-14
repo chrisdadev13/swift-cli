@@ -35,7 +35,7 @@ struct AudioCaptureCLI: ParsableCommand {
         signal(SIGINT) { _ in
             print("\nReceived interrupt signal. Stopping capture...")
             captureManager.stopCapture()
-            exit(0)
+            Foundation.exit(0)
         }
         
         // Start capture
@@ -56,6 +56,7 @@ struct AudioCaptureCLI: ParsableCommand {
 
 // MARK: - Audio Capture Manager
 
+@available(macOS 12.3, *)
 class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
     private var stream: SCStream?
     private var availableContent: SCShareableContent?
@@ -138,21 +139,34 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
         }
         
+        // Get the first display for the content filter
+        guard let display = availableContent.displays.first else {
+            throw NSError(domain: "AudioCaptureCLI", code: 3, userInfo: [NSLocalizedDescriptionKey: "No display available for capture"])
+        }
+        
         // Create a content filter for system audio
-        let filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
+        let filter = SCContentFilter(display: display, excludingApplications: [], exceptingWindows: [])
         
         // Configure the stream
         let configuration = SCStreamConfiguration()
         
         // Enable audio capture
-        configuration.capturesAudio = true
-        configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
+        if #available(macOS 13.0, *) {
+            configuration.capturesAudio = true
+            configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
+        } else {
+            throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
+        }
         
         // Create the stream
         stream = SCStream(filter: filter, configuration: configuration, delegate: self)
         
         // Add self as stream output to receive audio samples
-        try stream?.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
+        if #available(macOS 13.0, *) {
+            try stream?.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
+        } else {
+            throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
+        }
         
         // Start capturing
         try stream?.startCapture()
@@ -168,19 +182,21 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
     // MARK: - SCStreamOutput
     
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
-        guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
-        
-        if verbose {
-            let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
-            let sampleCount = CMSampleBufferGetNumSamples(sampleBuffer)
-            print("Received audio batch: \(sampleCount) samples at time \(String(format: "%.2f", timestamp))s")
-        }
-        
-        // Write the audio sample buffer to file
-        do {
-            try audioWriter.write(sampleBuffer: sampleBuffer)
-        } catch {
-            print("Error writing audio: \(error.localizedDescription)")
+        if #available(macOS 13.0, *) {
+            guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
+            
+            if verbose {
+                let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
+                let sampleCount = CMSampleBufferGetNumSamples(sampleBuffer)
+                print("Received audio batch: \(sampleCount) samples at time \(String(format: "%.2f", timestamp))s")
+            }
+            
+            // Write the audio sample buffer to file
+            do {
+                try audioWriter.write(sampleBuffer: sampleBuffer)
+            } catch {
+                print("Error writing audio: \(error.localizedDescription)")
+            }
         }
     }
 }
@@ -238,7 +254,9 @@ class AudioFileWriter {
         }
         
         // Get the audio stream basic description
-        var asbd = CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDescription).pointee
+        guard let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDescription)?.pointee else {
+            throw NSError(domain: "AudioFileWriter", code: 3, userInfo: [NSLocalizedDescriptionKey: "Could not get audio stream basic description"])
+        }
         
         // Create an AVAudioFormat from the ASBD
         audioFormat = AVAudioFormat(
@@ -269,7 +287,7 @@ class AudioFileWriter {
         var audioBufferList = AudioBufferList()
         var blockBuffer: CMBlockBuffer?
         
-        try CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
+        CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
             sampleBuffer,
             bufferListSizeNeededOut: nil,
             bufferListOut: &audioBufferList,
