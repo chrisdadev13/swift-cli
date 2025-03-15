@@ -1,11 +1,12 @@
 Building for production...
-/Users/m1/repio/swift-cli-v8/Sources/main.swift:233:79: error: value of type 'SCShareableContent' has no member 'isScreenCaptureAuthorized'
-231 |                     if #available(macOS 13.0, *) {
+/Users/m1/repio/swift-cli-v8/Sources/main.swift:234:76: error: cannot call value of non-function type 'SCShareableContent'
 232 |                         Task {
-233 |                             let authorized = await SCShareableContent.current.isScreenCaptureAuthorized
-    |                                                                               `- error: value of type 'SCShareableContent' has no member 'isScreenCaptureAuthorized'
-234 |                             print("\nScreen Recording Permission Status: \(authorized ? "✅ Authorized" : "❌ Not Authorized")")
-235 |                         }
+233 |                             do {
+234 |                                 let content = try await SCShareableContent.current()
+    |                                                                            `- error: cannot call value of non-function type 'SCShareableContent'
+235 |                                 print("\nScreen Recording Permission Status: ✅ Authorized")
+236 |                                 print("Found \(content.displays.count) displays and \(content.applications.count) applications")
+
 
 
 
