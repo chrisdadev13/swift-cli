@@ -1,11 +1,11 @@
-/Users/m1/repio/swift-cli-v7/swift-cli/Sources/main.swift:150:69: error: 'nil' is not compatible with expected argument type 'SCWindow'
-148 |         
-149 |         // Create a content filter for system audio without requiring a display
-150 |         let filter = SCContentFilter.init(desktopIndependentWindow: nil)
-    |                                                                     `- error: 'nil' is not compatible with expected argument type 'SCWindow'
-151 |         
-152 |         // Configure the stream
-
+Building for production...
+/Users/m1/repio/swift-cli-v8/Sources/main.swift:153:47: error: 'nil' is not compatible with expected argument type 'SCDisplay'
+151 |         if #available(macOS 13.0, *) {
+152 |             // Create an empty filter that includes all system audio
+153 |             filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
+    |                                               `- error: 'nil' is not compatible with expected argument type 'SCDisplay'
+154 |         } else {
+155 |             throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
 
 
 tyeDdLBSFH7o
