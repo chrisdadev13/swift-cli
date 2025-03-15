@@ -149,8 +149,13 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
         // Create a content filter for system audio
         let filter: SCContentFilter
         if #available(macOS 13.0, *) {
-            // Create an empty filter that includes all system audio
-            filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
+            // Get the first display as a reference (required by the API)
+            guard let display = availableContent.displays.first else {
+                throw NSError(domain: "AudioCaptureCLI", code: 3, userInfo: [NSLocalizedDescriptionKey: "No display available for capture"])
+            }
+            
+            // Create a simple filter that captures system audio
+            filter = SCContentFilter(display: display, excludingApplications: [], exceptingWindows: [])
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
         }
