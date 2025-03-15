@@ -146,8 +146,14 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
         }
         
-        // Create a content filter for system audio without requiring a display
-        let filter = SCContentFilter.init(desktopIndependentWindow: nil)
+        // Create a content filter for system audio
+        let filter: SCContentFilter
+        if #available(macOS 13.0, *) {
+            // Create an empty filter that includes all system audio
+            filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
+        } else {
+            throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
+        }
         
         // Configure the stream
         let configuration = SCStreamConfiguration()
@@ -157,13 +163,11 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             configuration.capturesAudio = true
             configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
             
-            // Set minimum frame rate to 0 since we only care about audio
-            configuration.minimumFrameInterval = CMTime(value: 1, timescale: 1)
-            
             // Disable video capture since we only want audio
             configuration.width = 1
             configuration.height = 1
             configuration.showsCursor = false
+            configuration.queueDepth = 6  // Increase queue depth for smoother audio
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
         }
