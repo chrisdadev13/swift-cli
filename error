@@ -1,11 +1,11 @@
 Building for production...
-/Users/m1/repio/swift-cli-v8/Sources/main.swift:153:47: error: 'nil' is not compatible with expected argument type 'SCDisplay'
-151 |         if #available(macOS 13.0, *) {
-152 |             // Create an empty filter that includes all system audio
-153 |             filter = SCContentFilter(display: nil, excludingApplications: [], exceptingWindows: [])
-    |                                               `- error: 'nil' is not compatible with expected argument type 'SCDisplay'
-154 |         } else {
-155 |             throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
+/Users/m1/repio/swift-cli-v8/Sources/main.swift:161:40: error: extra argument 'exceptingApplications' in call
+159 |                 display: display,
+160 |                 includingApplications: [], // Empty array means include all applications
+161 |                 exceptingApplications: [], // Don't exclude any applications
+    |                                        `- error: extra argument 'exceptingApplications' in call
+162 |                 exceptingWindows: []      // Don't exclude any windows
+163 |             )
 
 
 tyeDdLBSFH7o
