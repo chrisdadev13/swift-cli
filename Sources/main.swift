@@ -146,13 +146,8 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             throw NSError(domain: "AudioCaptureCLI", code: 2, userInfo: [NSLocalizedDescriptionKey: "No available content to capture"])
         }
         
-        // Get the first display for the content filter
-        guard let display = availableContent.displays.first else {
-            throw NSError(domain: "AudioCaptureCLI", code: 3, userInfo: [NSLocalizedDescriptionKey: "No display available for capture"])
-        }
-        
-        // Create a content filter for system audio
-        let filter = SCContentFilter(display: display, excludingApplications: [], exceptingWindows: [])
+        // Create a content filter for system audio without requiring a display
+        let filter = SCContentFilter.init(desktopIndependentWindow: nil)
         
         // Configure the stream
         let configuration = SCStreamConfiguration()
@@ -161,6 +156,14 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
         if #available(macOS 13.0, *) {
             configuration.capturesAudio = true
             configuration.excludesCurrentProcessAudio = true  // Don't capture our own audio
+            
+            // Set minimum frame rate to 0 since we only care about audio
+            configuration.minimumFrameInterval = CMTime(value: 1, timescale: 1)
+            
+            // Disable video capture since we only want audio
+            configuration.width = 1
+            configuration.height = 1
+            configuration.showsCursor = false
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Audio capture requires macOS 13.0 or later"])
         }
@@ -173,11 +176,24 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
             guard let stream = stream else {
                 throw NSError(domain: "AudioCaptureCLI", code: 6, userInfo: [NSLocalizedDescriptionKey: "Stream not initialized"])
             }
+            
+            print("Setting up audio capture stream...")
             try stream.addStreamOutput(self, type: .audio, sampleHandlerQueue: DispatchQueue.global(qos: .userInteractive))
             
             // Start capturing
-            // Note: startCapture() is marked as throws in the API but doesn't actually throw in this context
+            print("Starting audio capture...")
             stream.startCapture()
+            
+            // Verify that we're actually capturing audio
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                guard let self = self else { return }
+                if !self.isCapturing {
+                    print("Warning: Audio capture may not be working. Please check:")
+                    print("1. Screen Recording permission is granted")
+                    print("2. Running on a real machine (not a VM)")
+                    print("3. Audio is actually playing on the system")
+                }
+            }
         } else {
             throw NSError(domain: "AudioCaptureCLI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Audio output requires macOS 13.0 or later"])
         }
@@ -194,7 +210,13 @@ class AudioCaptureManager: NSObject, SCStreamDelegate, SCStreamOutput {
     
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
         if #available(macOS 13.0, *) {
-            guard type == .audio, isCapturing, let audioWriter = audioWriter else { return }
+            guard type == .audio, let audioWriter = audioWriter else { return }
+            
+            // Set capturing flag on first audio sample
+            if !isCapturing {
+                isCapturing = true
+                print("Successfully receiving audio samples...")
+            }
             
             if verbose {
                 let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
