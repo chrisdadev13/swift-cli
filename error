@@ -1,19 +1,11 @@
-Building for production...
-/Users/m1/repio/swift-cli-v5/Sources/main.swift:180:17: warning: no calls to throwing functions occur within 'try' expression
-178 |             // Start capturing
-179 |             do {
-180 |                 try stream.startCapture()
-    |                 `- warning: no calls to throwing functions occur within 'try' expression
-181 |             } catch {
-182 |                 throw NSError(domain: "AudioCaptureCLI", code: 7, 
+/Users/m1/repio/swift-cli-v7/swift-cli/Sources/main.swift:150:69: error: 'nil' is not compatible with expected argument type 'SCWindow'
+148 |         
+149 |         // Create a content filter for system audio without requiring a display
+150 |         let filter = SCContentFilter.init(desktopIndependentWindow: nil)
+    |                                                                     `- error: 'nil' is not compatible with expected argument type 'SCWindow'
+151 |         
+152 |         // Configure the stream
 
-/Users/m1/repio/swift-cli-v5/Sources/main.swift:181:15: warning: 'catch' block is unreachable because no errors are thrown in 'do' block
-179 |             do {
-180 |                 try stream.startCapture()
-181 |             } catch {
-    |               `- warning: 'catch' block is unreachable because no errors are thrown in 'do' block
-182 |                 throw NSError(domain: "AudioCaptureCLI", code: 7, 
-183 |                               userInfo: [NSLocalizedDescriptionKey: "Failed to start capture: \(error.localizedDescription)"])
 
 
 tyeDdLBSFH7o
